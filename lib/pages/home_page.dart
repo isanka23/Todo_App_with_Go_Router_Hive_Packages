@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:note_sphere_app/utils/constants.dart';
+import 'package:note_sphere_app/utils/router.dart';
 import 'package:note_sphere_app/utils/text_styles.dart';
 import 'package:note_sphere_app/widgets/notes_todo_card.dart';
 import 'package:note_sphere_app/widgets/progress_card.dart';
@@ -31,18 +32,28 @@ class _HomePageState extends State<HomePage> {
               totalTask: 5,
             ),
             const SizedBox(height: AppConstants.kDefaultPadding * 1.5),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                NotesTodoCard(
-                  title: "notes",
-                  description: "3 notes",
-                  icon: Icons.bookmark_add_outlined,
+                GestureDetector(
+                  onTap: () {
+                    AppRouter.router.push("/notes");
+                  },
+                  child: const NotesTodoCard(
+                    title: "notes",
+                    description: "3 notes",
+                    icon: Icons.bookmark_add_outlined,
+                  ),
                 ),
-                NotesTodoCard(
-                  title: "To-Do-List",
-                  description: "3 Tasks",
-                  icon: Icons.today_outlined,
+                GestureDetector(
+                  onTap: () {
+                    AppRouter.router.push("/todos");
+                  },
+                  child: const NotesTodoCard(
+                    title: "To-Do-List",
+                    description: "3 Tasks",
+                    icon: Icons.today_outlined,
+                  ),
                 ),
               ],
             ),
