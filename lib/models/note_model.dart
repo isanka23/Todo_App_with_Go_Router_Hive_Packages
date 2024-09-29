@@ -25,6 +25,6 @@ class Note {
     required this.title,
     required this.categoty,
     required this.content,
-    required this.date,
+    required this.date, 
   }) : id = id ?? const Uuid().v4(); // if id is null, generate a new one
 }
