@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:note_sphere_app/models/note_model.dart';
 import 'package:uuid/uuid.dart';
@@ -67,5 +68,18 @@ class NoteService {
       }
     }
     return notesByCategory;
+  }
+
+  //method to get notes according to the category
+  Future<List<Note>> getNotesByCategoryName(String category) async {
+    final dynamic allNotes = await _myBox.get("notes");
+    final List<Note> notes = [];
+
+    for (final note in allNotes) {
+      if (note.category == Category) {
+        notes.add(note);
+      }
+    }
+    return notes;
   }
 }
