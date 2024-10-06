@@ -31,7 +31,7 @@ class _NotesPageState extends State<NotesPage> {
 
     //If the user is new, create the initial notes
     if (isNewUser) {
-      await noteService.createdInitialNotes();
+      await noteService.createInitialNotes();
     }
 
     //load notes

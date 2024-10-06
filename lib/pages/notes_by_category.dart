@@ -30,7 +30,7 @@ class _NotesByCategoryState extends State<NotesByCategory> {
   //load all notes by category
   Future<void> _loadNotesByCategory() async {
     final noteService = NoteService();
-    noteList = await noteService.getNotesByCategoryName(widget.category);
+    noteList = await noteService.getNotesByCategory(widget.category);
     print(noteList);
     setState(() {
       print(noteList);

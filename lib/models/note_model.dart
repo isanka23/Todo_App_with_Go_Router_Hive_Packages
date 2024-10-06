@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 part 'note_model.g.dart';
 
-
 @HiveType(typeId: 1)
 class Note {
   @HiveField(0)
@@ -12,7 +11,7 @@ class Note {
   final String title;
 
   @HiveField(2)
-  final String categoty;
+  final String category; // Corrected field name
 
   @HiveField(3)
   final String content;
@@ -23,8 +22,8 @@ class Note {
   Note({
     String? id,
     required this.title,
-    required this.categoty,
+    required this.category, // Corrected parameter name
     required this.content,
-    required this.date, 
+    required this.date,
   }) : id = id ?? const Uuid().v4(); // if id is null, generate a new one
 }
