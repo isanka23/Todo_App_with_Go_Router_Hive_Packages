@@ -98,58 +98,60 @@ class _NotesPageState extends State<NotesPage> {
           size: 30,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Notes Page",
-              style: AppTextStyles.appTitle,
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            allNotes.isEmpty
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: Center(
-                      child: Text(
-                        "No notes available",
-                        style: AppTextStyles.appTitle,
-                      ),
-                    ),
-                  )
-                : GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: AppConstants.kDefaultPadding,
-                      mainAxisSpacing: AppConstants.kDefaultPadding,
-                      childAspectRatio: 6 / 4,
-                    ),
-                    itemCount: notesWithCategory.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          //Navigate to notes by category
-                          AppRouter.router.push(
-                            "/category",
-                            extra: notesWithCategory.keys.elementAt(index),
-                          );
-                        },
-                        child: NotesCard(
-                          notesCategory:
-                              notesWithCategory.keys.elementAt(index),
-                          noOfNotes:
-                              notesWithCategory.values.elementAt(index).length,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Notes Page",
+                style: AppTextStyles.appTitle,
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              allNotes.isEmpty
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Center(
+                        child: Text(
+                          "No notes available",
+                          style: AppTextStyles.appTitle,
                         ),
-                      );
-                    },
-                  ),
-          ],
+                      ),
+                    )
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: AppConstants.kDefaultPadding,
+                        mainAxisSpacing: AppConstants.kDefaultPadding,
+                        childAspectRatio: 6 / 4,
+                      ),
+                      itemCount: notesWithCategory.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            //Navigate to notes by category
+                            AppRouter.router.push(
+                              "/category",
+                              extra: notesWithCategory.keys.elementAt(index),
+                            );
+                          },
+                          child: NotesCard(
+                            notesCategory:
+                                notesWithCategory.keys.elementAt(index),
+                            noOfNotes:
+                                notesWithCategory.values.elementAt(index).length,
+                          ),
+                        );
+                      },
+                    ),
+            ],
+          ),
         ),
       ),
     );

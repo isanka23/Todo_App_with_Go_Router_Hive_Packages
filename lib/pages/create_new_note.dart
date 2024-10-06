@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:note_sphere_app/helpers/helpers.dart';
+import 'package:note_sphere_app/models/note_model.dart';
 import 'package:note_sphere_app/services/note_service.dart';
 import 'package:note_sphere_app/utils/colors.dart';
 import 'package:note_sphere_app/utils/constants.dart';
+import 'package:note_sphere_app/utils/router.dart';
 import 'package:note_sphere_app/utils/text_styles.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateNotePage extends StatefulWidget {
   final bool isNewCategory;
@@ -18,14 +22,27 @@ class CreateNotePage extends StatefulWidget {
 }
 
 class _CreateNotePageState extends State<CreateNotePage> {
+  List<String> categories = [];
+  final NoteService noteService = NoteService();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _noteTitleController = TextEditingController();
+  final TextEditingController _noteContentController = TextEditingController();
+  final TextEditingController _noteCategoryController = TextEditingController();
+  String category = "";
+
   @override
   void initState() {
     super.initState();
     _loadCategories();
   }
 
-  List<String> categories = [];
-  final NoteService noteService = NoteService();
+  @override
+  void dispose() {
+    _noteTitleController.dispose();
+    _noteContentController.dispose();
+    _noteCategoryController.dispose();
+    super.dispose();
+  }
 
   Future _loadCategories() async {
     categories = await noteService.getAllCategories();
@@ -52,6 +69,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     //drop down
@@ -61,6 +79,13 @@ class _CreateNotePageState extends State<CreateNotePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextFormField(
+                              controller: _noteCategoryController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Category cannot be empty";
+                                }
+                                return null;
+                              },
                               style: TextStyle(
                                 color: AppColors.kWhiteColor,
                                 fontSize: 20,
@@ -98,7 +123,13 @@ class _CreateNotePageState extends State<CreateNotePage> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: DropdownButtonFormField(
+                            child: DropdownButtonFormField<String>(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Category cannot be empty";
+                                }
+                                return null;
+                              },
                               style: TextStyle(
                                 color: AppColors.kWhiteColor,
                                 fontFamily: GoogleFonts.dmSans().fontFamily,
@@ -138,7 +169,11 @@ class _CreateNotePageState extends State<CreateNotePage> {
                                   ),
                                 );
                               }).toList(),
-                              onChanged: (value) {},
+                              onChanged: (String? value) {
+                                setState(() {
+                                  category = value!;
+                                });
+                              },
                             ),
                           ),
                     const SizedBox(
@@ -146,6 +181,13 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     ),
                     //title
                     TextFormField(
+                      controller: _noteTitleController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Title cannot be empty";
+                        }
+                        return null;
+                      },
                       maxLines: 2,
                       style: TextStyle(
                         color: AppColors.kWhiteColor,
@@ -165,6 +207,13 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     ),
                     //content
                     TextFormField(
+                      controller: _noteContentController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Content cannot be empty";
+                        }
+                        return null;
+                      },
                       maxLines: 12,
                       style: TextStyle(
                         color: AppColors.kWhiteColor,
@@ -198,7 +247,39 @@ class _CreateNotePageState extends State<CreateNotePage> {
                               AppColors.kFabColor,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            //save note
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                noteService.addNote(
+                                  Note(
+                                    title: _noteTitleController.text,
+                                    category: widget.isNewCategory
+                                        ? _noteCategoryController.text
+                                        : category,
+                                    content: _noteContentController.text,
+                                    date: DateTime.now(),
+                                    id: const Uuid().v4(),
+                                  ),
+                                );
+                                //show snackbar
+                                AppHelpers.showSnackBar(
+                                  context,
+                                  "Note saved successfully",
+                                );
+                                //clear the form
+                                _noteTitleController.clear();
+                                _noteContentController.clear();
+                                AppRouter.router.push("/notes");
+                              } catch (e) {
+                                print(e);
+                                AppHelpers.showSnackBar(
+                                  context,
+                                  "An error occurred",
+                                );
+                              }
+                            }
+                          },
                           child: const Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
