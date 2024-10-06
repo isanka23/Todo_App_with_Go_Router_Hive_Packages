@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:note_sphere_app/pages/create_note.dart';
 import 'package:note_sphere_app/pages/home_page.dart';
 import 'package:note_sphere_app/pages/notes_by_category.dart';
 import 'package:note_sphere_app/pages/notes_page.dart';
@@ -44,7 +45,16 @@ class AppRouter {
           final String Category = state.extra as String;
           return NotesByCategory(category: Category);
         },
-      )
+      ),
+      //create new note
+      GoRoute(
+        name: "create new",
+        path: "/create-note",
+        builder: (context, state) {
+          final bool isNewCategoryPage = state.extra as bool;
+          return CreateNotePage(isNewCategory: isNewCategoryPage);
+        },
+      ),
     ],
   );
 }
