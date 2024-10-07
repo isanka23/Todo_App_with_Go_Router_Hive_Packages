@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:note_sphere_app/models/note_model.dart';
 import 'package:note_sphere_app/pages/create_new_note.dart';
 import 'package:note_sphere_app/pages/home_page.dart';
 import 'package:note_sphere_app/pages/notes_by_category.dart';
 import 'package:note_sphere_app/pages/notes_page.dart';
 import 'package:note_sphere_app/pages/todo_page.dart';
+import 'package:note_sphere_app/pages/update_note_page.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -53,6 +55,15 @@ class AppRouter {
         builder: (context, state) {
           final bool isNewCategoryPage = state.extra as bool;
           return CreateNotePage(isNewCategory: isNewCategoryPage);
+        },
+      ),
+      //edditing note
+      GoRoute(
+        name: "edit note",
+        path: "/edit-note",
+        builder: (context, state) {
+          final Note note = state.extra as Note;
+          return UpdateNotePage(note: note);
         },
       ),
     ],
