@@ -112,6 +112,12 @@ class _NotesByCategoryState extends State<NotesByCategory> {
                     editNote: () async {
                       _editNote(noteList[index]);
                     },
+                    viewSingleNote: () {
+                      AppRouter.router.push(
+                        "/single-note",
+                        extra: noteList[index],
+                      );
+                    },
                   );
                 },
               ),
