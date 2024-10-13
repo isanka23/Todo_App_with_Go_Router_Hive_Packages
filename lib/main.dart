@@ -7,6 +7,7 @@ import 'package:note_sphere_app/utils/router.dart';
 import 'package:note_sphere_app/utils/theme_data.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Initialize the hive package
   await Hive.initFlutter();
 

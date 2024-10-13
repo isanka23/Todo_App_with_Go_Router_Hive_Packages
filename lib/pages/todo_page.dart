@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:note_sphere_app/models/todo_model.dart';
+import 'package:note_sphere_app/services/todo_service.dart';
 import 'package:note_sphere_app/utils/text_styles.dart';
 import 'package:note_sphere_app/widgets/completed_tab.dart';
 import 'package:note_sphere_app/widgets/todo_tab.dart';
@@ -13,11 +15,35 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late List<Todo> allTodos = [];
+  late List<Todo> incompletedTodos = [];
+  late List<Todo> completedTodos = [];
+  TodoService todoService = TodoService();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _checkIfUserIsNew();
+  }
+
+  void _checkIfUserIsNew() async {
+    final bool isNewUser = await todoService.isNewUser();
+    if (isNewUser) {
+      await todoService.createIntialTodos();
+    }
+    _loadToDos();
+  }
+
+  Future<void> _loadToDos() async {
+    final List<Todo> loadTodos = await todoService.loadTodos();
+    setState(() {
+      allTodos = loadTodos;
+      //incompleted todos
+      incompletedTodos = allTodos.where((todo) => !todo.isDone).toList();
+      //completed todos
+      completedTodos = allTodos.where((todos) => todos.isDone).toList();
+    });
   }
 
   @override
@@ -35,7 +61,7 @@ class _TodoPageState extends State<TodoPage>
             ),
             Tab(
               child: Text(
-                "ToDo",
+                "Completed",
                 style: AppTextStyles.appDescriptionStyle,
               ),
             )
@@ -61,9 +87,13 @@ class _TodoPageState extends State<TodoPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          TodoTab(),
-          CompletedTab(),
+        children: [
+          TodoTab(
+            isCompletedTodos: incompletedTodos,
+          ),
+          CompletedTab(
+            completedTodos: completedTodos,
+          ),
         ],
       ),
     );
