@@ -89,10 +89,12 @@ class _TodoPageState extends State<TodoPage>
         controller: _tabController,
         children: [
           TodoTab(
-            isCompletedTodos: incompletedTodos,
+            inCompletedTodos: incompletedTodos,
+            completedTodo: completedTodos,
           ),
           CompletedTab(
-            completedTodos: completedTodos,
+            completedTodos: completedTodos, 
+            inCompletedTodos: incompletedTodos,
           ),
         ],
       ),

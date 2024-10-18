@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:note_sphere_app/models/todo_model.dart';
 
-
-
 class TodoService {
   //all todos
   List<Todo> todos = [
@@ -48,5 +46,18 @@ class TodoService {
       return todos.cast<Todo>().toList();
     }
     return [];
+  }
+
+  //marked the todo as done
+  Future<void> markAsDone(Todo todo) async {
+    try {
+      final dynamic allTodos = await _myBox.get("todos");
+      final int index = allTodos.indexWhere((element) => element.id == todo.id);
+      allTodos[index] = todos;
+
+      await _myBox.put("todos", allTodos);
+    } catch (error) {
+      print(error.toString());
+    }
   }
 }

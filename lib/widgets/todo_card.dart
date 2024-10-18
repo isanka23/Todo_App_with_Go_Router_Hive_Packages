@@ -6,10 +6,12 @@ import 'package:note_sphere_app/utils/text_styles.dart';
 class TodoCard extends StatefulWidget {
   final Todo todo;
   final bool isComplted;
+  final Function() onCheckBoxTap;
   const TodoCard({
     super.key,
     required this.todo,
     required this.isComplted,
+    required this.onCheckBoxTap,
   });
 
   @override
@@ -49,7 +51,9 @@ class _TodoCardState extends State<TodoCard> {
         ),
         trailing: Checkbox(
           value: widget.isComplted,
-          onChanged: (value) {},
+          onChanged: (value) {
+            widget.onCheckBoxTap();
+          },
         ),
       ),
     );
