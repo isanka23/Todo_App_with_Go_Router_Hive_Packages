@@ -66,7 +66,19 @@ class TodoService {
     try {
       final dynamic allTodos = await _myBox.get("todos");
       allTodos.add(todo);
-      
+
+      await _myBox.put("todos", allTodos);
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  //method to delete a todo
+  Future<void> deleteTodo(Todo todo) async {
+    try {
+      final dynamic allTodos = await _myBox.get("todos");
+      allTodos.remove(todo);
+
       await _myBox.put("todos", allTodos);
     } catch (error) {
       print(error.toString());

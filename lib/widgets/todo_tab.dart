@@ -51,7 +51,7 @@ class _TodoTabState extends State<TodoTab> {
   @override
   Widget build(BuildContext context) {
     setState(() {
-      widget.inCompletedTodos.sort((a,b) => a.time.compareTo(b.time));
+      widget.inCompletedTodos.sort((a, b) => a.time.compareTo(b.time));
     });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -65,10 +65,24 @@ class _TodoTabState extends State<TodoTab> {
               itemCount: widget.inCompletedTodos.length,
               itemBuilder: (context, index) {
                 final Todo todo = widget.inCompletedTodos[index];
-                return TodoCard(
-                  todo: todo,
-                  isComplted: false,
-                  onCheckBoxTap: () => _markTodoAsDone(todo),
+                return Dismissible(
+                  key: Key(todo.id.toString()),
+                  onDismissed: (direction) {
+                    setState(() {
+                      widget.inCompletedTodos.removeAt(index);
+                      TodoService().deleteTodo(todo);
+                    });
+
+                    AppHelpers.showSnackBar(
+                      context,
+                      "Todo deleted",
+                    );
+                  },
+                  child: TodoCard(
+                    todo: todo,
+                    isComplted: false,
+                    onCheckBoxTap: () => _markTodoAsDone(todo),
+                  ),
                 );
               },
             ),
